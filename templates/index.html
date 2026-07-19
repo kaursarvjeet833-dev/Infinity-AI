@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,10 +21,122 @@
       </svg>
     </div>
     <h1>Infinity AI</h1>
-    <button class="clear-btn" onclick="clearChat()">🗑 Clear</button>
+    <div style="display:flex; gap:8px; align-items:center;">
+      <span id="planBadge" class="plan-badge free">FREE</span>
+      <button class="clear-btn" onclick="toggleHistory()">📋 History</button>
+      <button class="clear-btn" onclick="clearChat()">🗑 Clear</button>
+    </div>
   </div>
 
-  <!-- Chat Area -->
+  <!-- Usage Bar -->
+  <div class="usage-bar">
+    <span id="usageText">0 / 20 messages used</span>
+    <div class="usage-track">
+      <div class="usage-fill" id="usageFill" style="width:0%"></div>
+    </div>
+    <button class="upgrade-btn" onclick="togglePlans()">⚡ Upgrade</button>
+  </div>
+
+  <!-- Payment Modal -->
+  <div id="paymentModal" class="modal" style="display:none">
+    <div class="modal-box" style="max-width:380px;">
+      <h2 id="paymentTitle" style="text-align:center; margin-bottom:8px;">Upgrade Plan</h2>
+      <div style="text-align:center; margin-bottom:20px;">
+        <div style="font-size:32px; font-weight:700; color:#FF6B35;" id="paymentPrice">₹166</div>
+        <div style="color:#8B949E; font-size:13px;" id="paymentDuration">3 Months</div>
+      </div>
+
+      <!-- QR Code -->
+      <div style="text-align:center; margin-bottom:20px;">
+        <img id="qrCode" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=6395927643@ibl%26pn=Prabhjeet%20Singh%26cu=INR" style="border-radius:12px; border:4px solid #FF6B35;"/>
+        <p style="color:#8B949E; font-size:12px; margin-top:8px;">Scan with any UPI app</p>
+      </div>
+
+      <!-- Payment Buttons -->
+      <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+        <a id="gpayLink" href="#" style="display:flex; align-items:center; justify-content:center; gap:10px; background:#1a73e8; color:white; padding:12px; border-radius:12px; text-decoration:none; font-weight:600;">
+          💳 Pay with GPay
+        </a>
+        <a id="phonepeLink" href="#" style="display:flex; align-items:center; justify-content:center; gap:10px; background:#5f259f; color:white; padding:12px; border-radius:12px; text-decoration:none; font-weight:600;">
+          💜 Pay with PhonePe
+        </a>
+        <a id="upiLink" href="#" style="display:flex; align-items:center; justify-content:center; gap:10px; background:#FF6B35; color:white; padding:12px; border-radius:12px; text-decoration:none; font-weight:600;">
+          🏦 Pay with Any UPI App
+        </a>
+        <button onclick="copyUPI()" style="background:#21262D; color:#ccc; border:1px solid #30363D; padding:12px; border-radius:12px; cursor:pointer; font-family:Poppins,sans-serif; font-size:14px;">
+          📋 Copy UPI ID: 6395927643@ibl
+        </button>
+      </div>
+
+      <!-- Instructions -->
+      <div style="background:#0D1117; border-radius:12px; padding:12px; margin-bottom:16px; border:1px solid #30363D;">
+        <p style="font-size:12px; color:#8B949E; line-height:1.8;">
+          After payment:<br/>
+          1. Take a screenshot of payment ✅<br/>
+          2. Send to WhatsApp: <strong style="color:#FF6B35;">+91 6395927643</strong><br/>
+          3. We will activate your plan within 1 hour!
+        </p>
+      </div>
+
+      <button onclick="closePayment()" style="width:100%; background:none; border:1px solid #30363D; color:#ccc; padding:10px; border-radius:12px; cursor:pointer; font-family:Poppins,sans-serif;">
+        ✕ Close
+      </button>
+    </div>
+  </div>
+
+  <!-- Plans Modal -->
+  <div id="plansModal" class="modal" style="display:none">
+    <div class="modal-box">
+      <h2 style="text-align:center; margin-bottom:20px;">Choose Your Plan</h2>
+      <div class="plans-grid">
+        <div class="plan-card free-card">
+          <h3>🆓 Free</h3>
+          <div class="price">₹0</div>
+          <ul>
+            <li>✅ 5 hours access</li>
+            <li>✅ 20 messages</li>
+            <li>❌ No image upload</li>
+            <li>❌ No file upload</li>
+          </ul>
+          <button class="plan-btn" onclick="togglePlans()">Current Plan</button>
+        </div>
+        <div class="plan-card pro-card">
+          <h3>⚡ Basic</h3>
+          <div class="price">$2</div>
+          <ul>
+            <li>✅ 3 months access</li>
+            <li>✅ 500 messages/day</li>
+            <li>✅ Image upload</li>
+            <li>✅ File upload</li>
+          </ul>
+          <button class="plan-btn pro-btn" onclick="selectPlan('pro')">Upgrade $2</button>
+        </div>
+        <div class="plan-card max-card">
+          <h3>👑 Pro</h3>
+          <div class="price">$20</div>
+          <ul>
+            <li>✅ 3 months access</li>
+            <li>✅ Unlimited messages</li>
+            <li>✅ Unlimited images</li>
+            <li>✅ Camera support</li>
+          </ul>
+          <button class="plan-btn max-btn" onclick="selectPlan('max')">Upgrade $20</button>
+        </div>
+      </div>
+      <button onclick="togglePlans()" style="margin-top:20px; background:none; border:none; color:#ccc; cursor:pointer; width:100%; text-align:center;">✕ Close</button>
+    </div>
+  </div>
+
+  <!-- History Panel -->
+  <div id="historyPanel" class="history-panel" style="display:none">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h3>📋 Chat History</h3>
+      <button onclick="toggleHistory()" style="background:none; border:none; color:#ccc; cursor:pointer; font-size:18px;">✕</button>
+    </div>
+    <div id="historyList"></div>
+  </div>
+
+  <!-- Chat Box -->
   <div class="chat-box" id="chatBox">
     <div class="welcome">
       <div class="welcome-icon">
@@ -39,25 +152,144 @@
     </div>
   </div>
 
+  <!-- Image Preview -->
+  <div id="imagePreview" style="display:none; padding:8px 16px; background:#161B22; border-top:1px solid #30363D;">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <img id="previewImg" style="height:60px; border-radius:8px;"/>
+      <span style="color:#ccc; font-size:13px;">Image ready to send</span>
+      <button onclick="removeImage()" style="background:#FF6B35; border:none; color:white; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:12px;">✕</button>
+    </div>
+  </div>
+
   <!-- Input Area -->
   <div class="input-area">
-    <input
-      type="text"
-      id="userInput"
-      placeholder="Ask anything..."
-      onkeydown="if(event.key==='Enter') sendMessage()"
-      autocomplete="off"
-    />
+    <label for="imageInput" title="Upload Image" style="cursor:pointer; font-size:22px;">🖼️</label>
+    <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="previewImage(event)"/>
+    <label for="cameraInput" title="Take Photo" style="cursor:pointer; font-size:22px;">📷</label>
+    <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none" onchange="previewImage(event)"/>
+    <label for="fileInput" title="Upload File" style="cursor:pointer; font-size:22px;">📎</label>
+    <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt" style="display:none" onchange="handleFile(event)"/>
+    <input type="text" id="userInput" placeholder="Ask anything..." onkeydown="if(event.key==='Enter') sendMessage()" autocomplete="off"/>
     <button onclick="sendMessage()" id="sendBtn">➤</button>
   </div>
 
   <script>
     let welcomeShown = true;
+    let selectedImage = null;
+    let messagesUsed = 0;
+    let messagesLimit = 20;
+    let currentPlan = "free";
+
+    window.onload = async () => {
+      const res = await fetch("/get_plan");
+      const data = await res.json();
+      messagesUsed = data.messages_used;
+      messagesLimit = data.messages_limit;
+      currentPlan = data.plan;
+      updateUsageBar();
+      updatePlanBadge();
+    };
+
+    function updateUsageBar() {
+      const pct = messagesLimit === 99999 ? 0 : (messagesUsed / messagesLimit) * 100;
+      document.getElementById("usageFill").style.width = pct + "%";
+      document.getElementById("usageText").innerText =
+        messagesLimit === 99999 ? "Unlimited messages" :
+        `${messagesUsed} / ${messagesLimit} messages used`;
+    }
+
+    function updatePlanBadge() {
+      const badge = document.getElementById("planBadge");
+      badge.className = "plan-badge " + currentPlan;
+      badge.innerText = currentPlan.toUpperCase();
+    }
+
+    function togglePlans() {
+      const modal = document.getElementById("plansModal");
+      modal.style.display = modal.style.display === "none" ? "flex" : "none";
+    }
+
+    function closePayment() {
+      document.getElementById("paymentModal").style.display = "none";
+    }
+
+    function copyUPI() {
+      navigator.clipboard.writeText("6395927643@ibl");
+      alert("UPI ID copied! ✅ Open GPay/PhonePe and pay manually.");
+    }
+
+    function selectPlan(plan) {
+      const plans = {
+        pro: { name: 'Basic', price: '₹166 ($2)', duration: '3 Months Access', amount: '166' },
+        max: { name: 'Pro', price: '₹1660 ($20)', duration: '3 Months Access', amount: '1660' }
+      };
+
+      const p = plans[plan];
+      document.getElementById("paymentTitle").innerText = `Upgrade to ${p.name}`;
+      document.getElementById("paymentPrice").innerText = p.price;
+      document.getElementById("paymentDuration").innerText = p.duration;
+      document.getElementById("qrCode").src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=6395927643@ibl%26pn=Prabhjeet%20Singh%26am=${p.amount}%26cu=INR`;
+      document.getElementById("gpayLink").href = `gpay://upi/pay?pa=6395927643@ibl&pn=PrabhjeetSingh&am=${p.amount}&cu=INR&tn=InfinityAI${p.name}`;
+      document.getElementById("phonepeLink").href = `phonepe://pay?pa=6395927643@ibl&pn=PrabhjeetSingh&am=${p.amount}&cu=INR`;
+      document.getElementById("upiLink").href = `upi://pay?pa=6395927643@ibl&pn=PrabhjeetSingh&am=${p.amount}&cu=INR`;
+
+      document.getElementById("plansModal").style.display = "none";
+      document.getElementById("paymentModal").style.display = "flex";
+    }
+
+    async function toggleHistory() {
+      const panel = document.getElementById("historyPanel");
+      if (panel.style.display === "none") {
+        panel.style.display = "block";
+        const res = await fetch("/get_history");
+        const data = await res.json();
+        const list = document.getElementById("historyList");
+        if (data.history.length === 0) {
+          list.innerHTML = '<p style="color:#8B949E; text-align:center;">No history yet</p>';
+        } else {
+          list.innerHTML = data.history.slice().reverse().map(h => `
+            <div class="history-item">
+              <div class="history-time">${h.time}</div>
+              <div class="history-user">You: ${h.user}</div>
+              <div class="history-ai">AI: ${h.ai.substring(0, 100)}...</div>
+            </div>
+          `).join("");
+        }
+      } else {
+        panel.style.display = "none";
+      }
+    }
+
+    function previewImage(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      selectedImage = file;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        document.getElementById("previewImg").src = e.target.result;
+        document.getElementById("imagePreview").style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeImage() {
+      selectedImage = null;
+      document.getElementById("imagePreview").style.display = "none";
+      document.getElementById("imageInput").value = "";
+      document.getElementById("cameraInput").value = "";
+    }
+
+    function handleFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      addBubble(`📎 File uploaded: ${file.name}`, "user");
+      addBubble("File upload is available on Basic and Pro plans!", "ai");
+    }
 
     async function sendMessage() {
       const input = document.getElementById("userInput");
       const message = input.value.trim();
-      if (!message) return;
+      if (!message && !selectedImage) return;
 
       if (welcomeShown) {
         document.querySelector(".welcome").style.display = "none";
@@ -67,23 +299,34 @@
       input.value = "";
       document.getElementById("sendBtn").disabled = true;
 
-      addBubble(message, "user");
+      if (selectedImage) {
+        addImageBubble(document.getElementById("previewImg").src, message);
+      } else {
+        addBubble(message, "user");
+      }
+
       const typingId = addTyping();
 
       try {
-        const res = await fetch("/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message })
-        });
+        const formData = new FormData();
+        formData.append("message", message);
+        if (selectedImage) formData.append("image", selectedImage);
+
+        const res = await fetch("/chat", { method: "POST", body: formData });
         const data = await res.json();
         removeTyping(typingId);
         addBubble(data.reply, "ai");
+
+        if (data.messages_used !== undefined) {
+          messagesUsed = data.messages_used;
+          updateUsageBar();
+        }
       } catch {
         removeTyping(typingId);
         addBubble("Something went wrong. Please try again.", "ai");
       }
 
+      removeImage();
       document.getElementById("sendBtn").disabled = false;
       input.focus();
     }
@@ -93,6 +336,15 @@
       const div = document.createElement("div");
       div.className = `bubble ${sender}`;
       div.innerText = text;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function addImageBubble(src, text) {
+      const box = document.getElementById("chatBox");
+      const div = document.createElement("div");
+      div.className = "bubble user";
+      div.innerHTML = `<img src="${src}" style="max-width:200px; border-radius:8px; display:block; margin-bottom:6px;"/>${text || ""}`;
       box.appendChild(div);
       box.scrollTop = box.scrollHeight;
     }
