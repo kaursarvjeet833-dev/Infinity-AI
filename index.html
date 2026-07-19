@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Infinity AI</title>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">
+  <svg width="42" height="42" viewBox="0 0 120 120">
+    <circle cx="60" cy="60" r="52" fill="#FF6B35" opacity="0.2"/>
+    <circle cx="60" cy="60" r="42" fill="#FF6B35"/>
+    <text x="60" y="50" text-anchor="middle" font-size="20" fill="white">✦</text>
+    <text x="60" y="75" text-anchor="middle" font-size="14" fill="white" font-family="Arial" font-weight="700">ASK</text>
+  </svg>
+</div>
+    <h1>Infinity AI</h1>
+    <button class="clear-btn" onclick="clearChat()">🗑 Clear</button>
+  </div>
+
+  <!-- Chat Area -->
+  <div class="chat-box" id="chatBox">
+    <div class="welcome">
+      <div class="welcome-icon">
+  <svg width="80" height="80" viewBox="0 0 120 120">
+    <circle cx="60" cy="60" r="52" fill="#FF6B35" opacity="0.2"/>
+    <circle cx="60" cy="60" r="42" fill="#FF6B35"/>
+    <text x="60" y="50" text-anchor="middle" font-size="28" fill="white">✦</text>
+    <text x="60" y="78" text-anchor="middle" font-size="16" fill="white" font-family="Arial" font-weight="700">ASK</text>
+  </svg>
+</div>
+      <h2>Hi! I'm Infinity AI</h2>
+      <p>Your free AI assistant. Ask me anything!</p>
+    </div>
+  </div>
+
+  <!-- Input Area -->
+  <div class="input-area">
+    <input
+      type="text"
+      id="userInput"
+      placeholder="Ask anything..."
+      onkeydown="if(event.key==='Enter') sendMessage()"
+      autocomplete="off"
+    />
+    <button onclick="sendMessage()" id="sendBtn">➤</button>
+  </div>
+
+  <script>
+    let welcomeShown = true;
+
+    async function sendMessage() {
+      const input = document.getElementById("userInput");
+      const message = input.value.trim();
+      if (!message) return;
+
+      if (welcomeShown) {
+        document.querySelector(".welcome").style.display = "none";
+        welcomeShown = false;
+      }
+
+      input.value = "";
+      document.getElementById("sendBtn").disabled = true;
+
+      addBubble(message, "user");
+      const typingId = addTyping();
+
+      try {
+        const res = await fetch("/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message })
+        });
+        const data = await res.json();
+        removeTyping(typingId);
+        addBubble(data.reply, "ai");
+      } catch {
+        removeTyping(typingId);
+        addBubble("Something went wrong. Please try again.", "ai");
+      }
+
+      document.getElementById("sendBtn").disabled = false;
+      input.focus();
+    }
+
+    function addBubble(text, sender) {
+      const box = document.getElementById("chatBox");
+      const div = document.createElement("div");
+      div.className = `bubble ${sender}`;
+      div.innerText = text;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function addTyping() {
+      const box = document.getElementById("chatBox");
+      const div = document.createElement("div");
+      const id = "typing_" + Date.now();
+      div.id = id;
+      div.className = "bubble ai typing";
+      div.innerHTML = '<span></span><span></span><span></span>';
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+      return id;
+    }
+
+    function removeTyping(id) {
+      const el = document.getElementById(id);
+      if (el) el.remove();
+    }
+
+    async function clearChat() {
+      await fetch("/clear", { method: "POST" });
+      const box = document.getElementById("chatBox");
+      box.innerHTML = `
+        <div class="welcome">
+          <div class="welcome-icon">🤖</div>
+          <h2>Hi! I'm Ask Anything</h2>
+          <p>Your free AI assistant. Ask me anything!</p>
+        </div>`;
+      welcomeShown = true;
+    }
+  </script>
+</body>
+</html>
