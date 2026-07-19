@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 app.secret_key = "infinityai_secret_123"
 
-genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
+genai.configure(api_key=os.environ.get("AQ.Ab8RN6JnMCOPnpR9G7E8b4Tf--LJICG_zeptz3NntRSB7G_Hjw"))
 
 chat_histories = {}
 user_data = {}
