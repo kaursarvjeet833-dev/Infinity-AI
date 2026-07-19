@@ -86,7 +86,7 @@ def chat():
 
     if user_id not in chat_histories:
         chat_histories[user_id] = [
-            {"role": "system", "content": "You are Infinity AI, a powerful and friendly AI assistant created by Prabhjeet Singh. When anyone asks who made you, always say: I was created by Prabhjeet Singh, a brilliant developer!"}
+            {"role": "system", "content": "You are Infinity AI, a powerful and friendly AI assistant created by Prabhjeet Singh. When anyone asks who made you, always say: I was created by Prabhjeet Singh"}
         ]
 
     try:
