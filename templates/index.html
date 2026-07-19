@@ -34,6 +34,7 @@
     <div class="usage-track">
       <div class="usage-fill" id="usageFill" style="width:0%"></div>
     </div>
+    <span id="timerText" style="font-size:11px; color:#FF6B35; white-space:nowrap;">⏱️ 5:00:00</span>
     <button class="upgrade-btn" onclick="togglePlans()">⚡ Upgrade</button>
   </div>
 
@@ -45,14 +46,10 @@
         <div style="font-size:32px; font-weight:700; color:#FF6B35;" id="paymentPrice">₹166</div>
         <div style="color:#8B949E; font-size:13px;" id="paymentDuration">3 Months</div>
       </div>
-
-      <!-- QR Code -->
       <div style="text-align:center; margin-bottom:20px;">
         <img id="qrCode" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=6395927643@ibl%26pn=Prabhjeet%20Singh%26cu=INR" style="border-radius:12px; border:4px solid #FF6B35;"/>
         <p style="color:#8B949E; font-size:12px; margin-top:8px;">Scan with any UPI app</p>
       </div>
-
-      <!-- Payment Buttons -->
       <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
         <a id="gpayLink" href="#" style="display:flex; align-items:center; justify-content:center; gap:10px; background:#1a73e8; color:white; padding:12px; border-radius:12px; text-decoration:none; font-weight:600;">
           💳 Pay with GPay
@@ -67,8 +64,6 @@
           📋 Copy UPI ID: 6395927643@ibl
         </button>
       </div>
-
-      <!-- Instructions -->
       <div style="background:#0D1117; border-radius:12px; padding:12px; margin-bottom:16px; border:1px solid #30363D;">
         <p style="font-size:12px; color:#8B949E; line-height:1.8;">
           After payment:<br/>
@@ -77,9 +72,20 @@
           3. We will activate your plan within 1 hour!
         </p>
       </div>
-
       <button onclick="closePayment()" style="width:100%; background:none; border:1px solid #30363D; color:#ccc; padding:10px; border-radius:12px; cursor:pointer; font-family:Poppins,sans-serif;">
         ✕ Close
+      </button>
+    </div>
+  </div>
+
+  <!-- Expired Modal -->
+  <div id="expiredModal" class="modal" style="display:none">
+    <div class="modal-box" style="max-width:340px; text-align:center;">
+      <div style="font-size:60px; margin-bottom:16px;">⏰</div>
+      <h2 style="margin-bottom:8px;">Free Time Expired!</h2>
+      <p style="color:#8B949E; font-size:14px; margin-bottom:20px;">Your 5 hour free access has ended. Upgrade to continue using Infinity AI!</p>
+      <button onclick="document.getElementById('expiredModal').style.display='none'; togglePlans();" style="width:100%; background:#FF6B35; color:white; border:none; padding:14px; border-radius:12px; cursor:pointer; font-family:Poppins,sans-serif; font-size:15px; font-weight:700;">
+        ⚡ Upgrade Now
       </button>
     </div>
   </div>
@@ -148,7 +154,7 @@
         </svg>
       </div>
       <h2>Hi! I'm Infinity AI</h2>
-      <p>Your free AI assistant. Ask me anything!</p>
+      <p>Your free AI assistant. 5 hours free access!</p>
     </div>
   </div>
 
@@ -179,6 +185,8 @@
     let messagesUsed = 0;
     let messagesLimit = 20;
     let currentPlan = "free";
+    let timeLeft = 18000;
+    let timerInterval = null;
 
     window.onload = async () => {
       const res = await fetch("/get_plan");
@@ -186,9 +194,42 @@
       messagesUsed = data.messages_used;
       messagesLimit = data.messages_limit;
       currentPlan = data.plan;
+      timeLeft = data.time_left;
       updateUsageBar();
       updatePlanBadge();
+      startTimer();
+
+      if (data.expired && currentPlan === "free") {
+        document.getElementById("expiredModal").style.display = "flex";
+      }
     };
+
+    function startTimer() {
+      if (currentPlan !== "free") {
+        document.getElementById("timerText").style.display = "none";
+        return;
+      }
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          document.getElementById("expiredModal").style.display = "flex";
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const h = Math.floor(timeLeft / 3600);
+      const m = Math.floor((timeLeft % 3600) / 60);
+      const s = timeLeft % 60;
+      document.getElementById("timerText").innerText =
+        `⏱️ ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      if (timeLeft < 600) {
+        document.getElementById("timerText").style.color = "#ff4444";
+      }
+    }
 
     function updateUsageBar() {
       const pct = messagesLimit === 99999 ? 0 : (messagesUsed / messagesLimit) * 100;
@@ -223,16 +264,14 @@
         pro: { name: 'Basic', price: '₹166 ($2)', duration: '3 Months Access', amount: '166' },
         max: { name: 'Pro', price: '₹1660 ($20)', duration: '3 Months Access', amount: '1660' }
       };
-
       const p = plans[plan];
       document.getElementById("paymentTitle").innerText = `Upgrade to ${p.name}`;
       document.getElementById("paymentPrice").innerText = p.price;
       document.getElementById("paymentDuration").innerText = p.duration;
       document.getElementById("qrCode").src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=6395927643@ibl%26pn=Prabhjeet%20Singh%26am=${p.amount}%26cu=INR`;
-      document.getElementById("gpayLink").href = `gpay://upi/pay?pa=6395927643@ibl&pn=PrabhjeetSingh&am=${p.amount}&cu=INR&tn=InfinityAI${p.name}`;
+      document.getElementById("gpayLink").href = `gpay://upi/pay?pa=6395927643@ibl&pn=PrabhjeetSingh&am=${p.amount}&cu=INR`;
       document.getElementById("phonepeLink").href = `phonepe://pay?pa=6395927643@ibl&pn=PrabhjeetSingh&am=${p.amount}&cu=INR`;
       document.getElementById("upiLink").href = `upi://pay?pa=6395927643@ibl&pn=PrabhjeetSingh&am=${p.amount}&cu=INR`;
-
       document.getElementById("plansModal").style.display = "none";
       document.getElementById("paymentModal").style.display = "flex";
     }
@@ -291,6 +330,11 @@
       const message = input.value.trim();
       if (!message && !selectedImage) return;
 
+      if (timeLeft <= 0 && currentPlan === "free") {
+        document.getElementById("expiredModal").style.display = "flex";
+        return;
+      }
+
       if (welcomeShown) {
         document.querySelector(".welcome").style.display = "none";
         welcomeShown = false;
@@ -316,6 +360,10 @@
         const data = await res.json();
         removeTyping(typingId);
         addBubble(data.reply, "ai");
+
+        if (data.limit_reached) {
+          document.getElementById("expiredModal").style.display = "flex";
+        }
 
         if (data.messages_used !== undefined) {
           messagesUsed = data.messages_used;
@@ -380,7 +428,7 @@
             </svg>
           </div>
           <h2>Hi! I'm Infinity AI</h2>
-          <p>Your free AI assistant. Ask me anything!</p>
+          <p>Your free AI assistant. 5 hours free access!</p>
         </div>`;
       welcomeShown = true;
     }
