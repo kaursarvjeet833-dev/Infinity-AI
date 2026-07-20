@@ -17,33 +17,14 @@ body {
   align-items: center;
   gap: 10px;
   border-bottom: 1px solid #30363D;
+  flex-shrink: 0;
 }
-
-.logo { display: flex; align-items: center; }
-
-.header h1 {
-  flex: 1;
-  font-size: 18px;
-  font-weight: 700;
-  color: #FF6B35;
-}
-
-.plan-badge {
-  padding: 3px 10px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.plan-badge.free { background: #30363D; color: #ccc; }
-.plan-badge.basic { background: #2F80ED; color: white; }
-.plan-badge.pro { background: #7B2FBE; color: white; }
 
 .clear-btn {
   background: #21262D;
   color: #ccc;
   border: 1px solid #30363D;
-  padding: 5px 10px;
+  padding: 6px 10px;
   border-radius: 20px;
   cursor: pointer;
   font-size: 14px;
@@ -51,142 +32,65 @@ body {
 
 .clear-btn:hover { background: #30363D; }
 
-.usage-bar {
+.toolbar {
   background: #161B22;
-  padding: 6px 16px;
+  padding: 8px 16px;
   display: flex;
-  align-items: center;
   gap: 8px;
   border-bottom: 1px solid #30363D;
-}
-
-.usage-track {
-  flex: 1;
-  height: 4px;
-  background: #30363D;
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.usage-fill {
-  height: 100%;
-  background: #FF6B35;
-  border-radius: 2px;
-  transition: width 0.3s;
-}
-
-.upgrade-btn {
-  background: #FF6B35;
-  color: white;
-  border: none;
-  padding: 4px 12px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 11px;
-  font-family: 'Poppins', sans-serif;
-  white-space: nowrap;
+  flex-wrap: wrap;
+  flex-shrink: 0;
 }
 
 .think-btn {
   background: #21262D;
   color: #ccc;
   border: 1px solid #30363D;
-  padding: 5px 12px;
+  padding: 6px 12px;
   border-radius: 20px;
   cursor: pointer;
   font-size: 12px;
   font-family: 'Poppins', sans-serif;
   transition: all 0.2s;
+  white-space: nowrap;
 }
 
-.think-btn:hover { background: #30363D; }
+.think-btn:hover { background: #30363D; color: white; }
 .think-btn.active { background: #FF6B35; color: white; border-color: #FF6B35; }
 
-.quick-btn {
-  background: #21262D;
-  color: #ccc;
+.sub-panel {
+  background: #161B22;
+  padding: 10px 16px;
+  border-bottom: 1px solid #30363D;
+  flex-shrink: 0;
+}
+
+.gen-input {
+  flex: 1;
+  background: #0D1117;
   border: 1px solid #30363D;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-family: 'Poppins', sans-serif;
+  outline: none;
+}
+
+.gen-input:focus { border-color: #FF6B35; }
+
+.gen-btn {
+  background: #FF6B35;
+  color: white;
+  border: none;
   padding: 8px 16px;
   border-radius: 20px;
   cursor: pointer;
   font-size: 13px;
   font-family: 'Poppins', sans-serif;
-}
-
-.quick-btn:hover { background: #FF6B35; color: white; border-color: #FF6B35; }
-
-.modal {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.8);
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-}
-
-.modal-box {
-  background: #161B22;
-  border-radius: 16px;
-  padding: 24px;
-  width: 100%;
-  max-width: 500px;
-  border: 1px solid #30363D;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.plans-grid {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.plan-card {
-  flex: 1;
-  min-width: 130px;
-  background: #0D1117;
-  border-radius: 12px;
-  padding: 16px;
-  border: 1px solid #30363D;
-  text-align: center;
-}
-
-.plan-card h3 { font-size: 14px; margin-bottom: 8px; }
-
-.price {
-  font-size: 22px;
-  font-weight: 700;
-  color: #FF6B35;
-  margin-bottom: 12px;
-}
-
-.plan-card ul {
-  list-style: none;
-  text-align: left;
-  font-size: 11px;
-  color: #8B949E;
-  margin-bottom: 16px;
-  line-height: 1.9;
-}
-
-.plan-btn {
-  width: 100%;
-  padding: 8px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-family: 'Poppins', sans-serif;
-  font-size: 12px;
   font-weight: 600;
-  background: #30363D;
-  color: white;
+  white-space: nowrap;
 }
-
-.pro-btn { background: #2F80ED; }
-.max-btn { background: #7B2FBE; }
 
 .history-panel {
   position: fixed;
@@ -212,8 +116,8 @@ body {
 
 .history-item:hover { border-color: #FF6B35; }
 .history-time { font-size: 10px; color: #8B949E; margin-bottom: 4px; }
-.history-user { font-size: 12px; color: #FF6B35; margin-bottom: 4px; }
-.history-ai { font-size: 12px; color: #ccc; }
+.history-user { font-size: 12px; color: #FF6B35; margin-bottom: 4px; font-weight: 600; }
+.history-ai { font-size: 12px; color: #ccc; line-height: 1.4; }
 
 .chat-box {
   flex: 1;
@@ -227,7 +131,8 @@ body {
 .welcome {
   text-align: center;
   margin: auto;
-  padding: 30px 20px;
+  padding: 20px;
+  max-width: 500px;
 }
 
 .welcome-icon {
@@ -236,11 +141,34 @@ body {
   margin-bottom: 16px;
 }
 
-.welcome h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
-.welcome p { color: #8B949E; font-size: 14px; }
+.quick-grid {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.quick-btn {
+  background: #21262D;
+  color: #ccc;
+  border: 1px solid #30363D;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.2s;
+}
+
+.quick-btn:hover {
+  background: #FF6B35;
+  color: white;
+  border-color: #FF6B35;
+}
 
 .bubble {
-  max-width: 80%;
+  max-width: 82%;
   padding: 12px 16px;
   border-radius: 18px;
   font-size: 14px;
@@ -294,6 +222,7 @@ body {
   gap: 6px;
   align-items: center;
   border-top: 1px solid #30363D;
+  flex-shrink: 0;
 }
 
 .input-area input[type="text"] {
@@ -306,11 +235,12 @@ body {
   font-size: 14px;
   font-family: 'Poppins', sans-serif;
   outline: none;
+  min-width: 0;
 }
 
 .input-area input[type="text"]:focus { border-color: #FF6B35; }
 
-.input-area button[onclick="sendMessage()"] {
+#sendBtn {
   background: #FF6B35;
   color: white;
   border: none;
@@ -320,10 +250,18 @@ body {
   font-size: 16px;
   cursor: pointer;
   flex-shrink: 0;
+  transition: background 0.2s;
 }
 
-.input-area button[onclick="sendMessage()"]:disabled { background: #333; cursor: not-allowed; }
+#sendBtn:hover { background: #e55a25; }
+#sendBtn:disabled { background: #333; cursor: not-allowed; }
 
 .chat-box::-webkit-scrollbar { width: 4px; }
 .chat-box::-webkit-scrollbar-track { background: transparent; }
 .chat-box::-webkit-scrollbar-thumb { background: #30363D; border-radius: 2px; }
+
+@media (max-width: 480px) {
+  .bubble { max-width: 90%; font-size: 13px; }
+  .header h1 { font-size: 16px; }
+  .think-btn { font-size: 11px; padding: 5px 10px; }
+}
