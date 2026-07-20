@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Infinity AI</title>
+  <title>Infinity AI — The Godfather of AI</title>
   <link rel="stylesheet" href="/static/style.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
 </head>
@@ -19,35 +20,28 @@
         <text x="60" y="75" text-anchor="middle" font-size="14" fill="white" font-family="Arial" font-weight="700">ASK</text>
       </svg>
     </div>
-    <h1>Infinity AI</h1>
-    <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
-      <span id="planBadge" class="plan-badge free">FREE</span>
+    <div style="flex:1;">
+      <h1 style="font-size:18px; font-weight:700; color:#FF6B35; margin:0;">Infinity AI</h1>
+      <p style="font-size:10px; color:#8B949E; margin:0;">The Godfather of AI 👑</p>
+    </div>
+    <div style="display:flex; gap:6px; align-items:center;">
       <button class="clear-btn" onclick="toggleHistory()">📋</button>
       <button class="clear-btn" onclick="clearChat()">🗑</button>
     </div>
   </div>
 
-  <!-- Usage Bar -->
-  <div class="usage-bar">
-    <span id="usageText" style="font-size:11px; color:var(--text-secondary);">0 / 20 messages</span>
-    <div class="usage-track">
-      <div class="usage-fill" id="usageFill" style="width:0%"></div>
-    </div>
-    <span id="timerText" style="font-size:11px; color:#FF6B35; white-space:nowrap;">⏱️ 05:00:00</span>
-    <button class="upgrade-btn" onclick="togglePlans()">⚡ Upgrade</button>
-  </div>
-
-  <!-- Think Mode Bar -->
-  <div style="background:#161B22; padding:6px 16px; display:flex; gap:8px; border-bottom:1px solid #30363D;">
-    <button id="fastBtn" onclick="setThinkMode('fast')" class="think-btn active">⚡ Fast Think</button>
+  <!-- Tool Bar -->
+  <div class="toolbar">
+    <button id="fastBtn" onclick="setThinkMode('fast')" class="think-btn active">⚡ Fast</button>
     <button id="deepBtn" onclick="setThinkMode('deep')" class="think-btn">🧠 Deep Think</button>
-    <button onclick="togglePYQ()" class="think-btn">📚 CBSE PYQs</button>
+    <button onclick="togglePYQ()" class="think-btn">📚 PYQs</button>
     <button onclick="toggleImageGen()" class="think-btn">🎨 Generate</button>
+    <button onclick="toggleAlexa()" class="think-btn">🔊 Commands</button>
   </div>
 
   <!-- PYQ Panel -->
-  <div id="pyqPanel" style="display:none; background:#161B22; padding:10px 16px; border-bottom:1px solid #30363D;">
-    <p style="font-size:12px; color:#8B949E; margin-bottom:8px;">CBSE Class 10 Previous Year Questions:</p>
+  <div id="pyqPanel" class="sub-panel" style="display:none;">
+    <p style="font-size:12px; color:#8B949E; margin-bottom:8px;">📚 CBSE Class 10 PYQs — Select subject:</p>
     <div style="display:flex; gap:8px; flex-wrap:wrap;">
       <button onclick="getPYQ('math')" class="think-btn">📐 Math</button>
       <button onclick="getPYQ('science')" class="think-btn">🔬 Science</button>
@@ -56,122 +50,46 @@
     </div>
   </div>
 
-  <!-- Image Generation Panel -->
-  <div id="imageGenPanel" style="display:none; background:#161B22; padding:10px 16px; border-bottom:1px solid #30363D;">
-    <p style="font-size:12px; color:#8B949E; margin-bottom:8px;">Generate images (Basic/Pro only):</p>
+  <!-- Image Gen Panel -->
+  <div id="imageGenPanel" class="sub-panel" style="display:none;">
+    <p style="font-size:12px; color:#8B949E; margin-bottom:8px;">🎨 Generate any image FREE:</p>
     <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px;">
-      <button onclick="setStyle('realistic')" class="think-btn" id="styleRealistic">🖼️ Realistic</button>
+      <button onclick="setStyle('realistic')" class="think-btn active" id="styleRealistic">🖼️ Realistic</button>
       <button onclick="setStyle('cartoon')" class="think-btn" id="styleCartoon">🎭 Cartoon</button>
       <button onclick="setStyle('anime')" class="think-btn" id="styleAnime">⛩️ Anime</button>
+      <button onclick="setStyle('3d')" class="think-btn" id="style3d">💎 3D Art</button>
+      <button onclick="setStyle('painting')" class="think-btn" id="stylePainting">🎨 Painting</button>
     </div>
     <div style="display:flex; gap:8px;">
-      <input type="text" id="imagePrompt" placeholder="Describe image to generate..." style="flex:1; background:#0D1117; border:1px solid #30363D; color:white; padding:8px 12px; border-radius:20px; font-size:13px; font-family:Poppins,sans-serif; outline:none;"/>
-      <button onclick="generateImage()" style="background:#FF6B35; color:white; border:none; padding:8px 16px; border-radius:20px; cursor:pointer; font-size:13px;">Generate</button>
+      <input type="text" id="imagePrompt" placeholder="Describe your image..." class="gen-input"/>
+      <button onclick="generateImage()" class="gen-btn">✨ Create</button>
     </div>
   </div>
 
-  <!-- Expired Modal -->
-  <div id="expiredModal" class="modal" style="display:none">
-    <div class="modal-box" style="max-width:340px; text-align:center;">
-      <div style="font-size:60px; margin-bottom:16px;">⏰</div>
-      <h2 style="margin-bottom:8px;">Free Time Expired!</h2>
-      <p style="color:#8B949E; font-size:14px; margin-bottom:20px;">Your 5 hour free access has ended. Upgrade to continue!</p>
-      <button onclick="document.getElementById('expiredModal').style.display='none'; togglePlans();" style="width:100%; background:#FF6B35; color:white; border:none; padding:14px; border-radius:12px; cursor:pointer; font-family:Poppins,sans-serif; font-size:15px; font-weight:700;">
-        ⚡ Upgrade Now
-      </button>
-    </div>
-  </div>
-
-  <!-- Payment Modal -->
-  <div id="paymentModal" class="modal" style="display:none">
-    <div class="modal-box" style="max-width:380px;">
-      <h2 id="paymentTitle" style="text-align:center; margin-bottom:8px;">Upgrade Plan</h2>
-      <div style="text-align:center; margin-bottom:20px;">
-        <div style="font-size:32px; font-weight:700; color:#FF6B35;" id="paymentPrice">₹250</div>
-        <div style="color:#8B949E; font-size:13px;" id="paymentDuration">3 Months</div>
-      </div>
-      <div style="text-align:center; margin-bottom:20px;">
-        <img id="qrCode" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=6395927643@ibl%26pn=Prabhjeet%20Singh%26cu=INR" style="border-radius:12px; border:4px solid #FF6B35;"/>
-        <p style="color:#8B949E; font-size:12px; margin-top:8px;">Scan with any UPI app</p>
-      </div>
-      <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
-        <a id="gpayLink" href="#" style="display:flex; align-items:center; justify-content:center; gap:10px; background:#1a73e8; color:white; padding:12px; border-radius:12px; text-decoration:none; font-weight:600;">💳 Pay with GPay</a>
-        <a id="phonepeLink" href="#" style="display:flex; align-items:center; justify-content:center; gap:10px; background:#5f259f; color:white; padding:12px; border-radius:12px; text-decoration:none; font-weight:600;">💜 Pay with PhonePe</a>
-        <a id="upiLink" href="#" style="display:flex; align-items:center; justify-content:center; gap:10px; background:#FF6B35; color:white; padding:12px; border-radius:12px; text-decoration:none; font-weight:600;">🏦 Pay with Any UPI</a>
-        <button onclick="copyUPI()" style="background:#21262D; color:#ccc; border:1px solid #30363D; padding:12px; border-radius:12px; cursor:pointer; font-family:Poppins,sans-serif; font-size:13px;">📋 Copy UPI: 6395927643@ibl</button>
-      </div>
-      <div style="background:#0D1117; border-radius:12px; padding:12px; margin-bottom:16px; border:1px solid #30363D;">
-        <p style="font-size:12px; color:#8B949E; line-height:1.8;">
-          After payment:<br/>
-          1. Screenshot your payment ✅<br/>
-          2. Send to WhatsApp: <strong style="color:#FF6B35;">+91 6395927643</strong><br/>
-          3. Plan activated within 1 hour!
-        </p>
-      </div>
-      <button onclick="closePayment()" style="width:100%; background:none; border:1px solid #30363D; color:#ccc; padding:10px; border-radius:12px; cursor:pointer; font-family:Poppins,sans-serif;">✕ Close</button>
-    </div>
-  </div>
-
-  <!-- Plans Modal -->
-  <div id="plansModal" class="modal" style="display:none">
-    <div class="modal-box">
-      <h2 style="text-align:center; margin-bottom:20px;">Choose Your Plan</h2>
-      <div class="plans-grid">
-        <div class="plan-card">
-          <h3>🆓 Free</h3>
-          <div class="price">₹0</div>
-          <ul>
-            <li>✅ 5 hours access</li>
-            <li>✅ 20 messages</li>
-            <li>✅ Voice input</li>
-            <li>✅ Camera</li>
-            <li>✅ CBSE Class 10</li>
-            <li>✅ Fast think</li>
-            <li>❌ Image generation</li>
-            <li>❌ Deep think</li>
-          </ul>
-          <button class="plan-btn" onclick="togglePlans()">Current</button>
-        </div>
-        <div class="plan-card" style="border:2px solid #2F80ED;">
-          <h3>⚡ Basic</h3>
-          <div class="price">$3</div>
-          <ul>
-            <li>✅ 3 months</li>
-            <li>✅ 500 messages/day</li>
-            <li>✅ Image generation</li>
-            <li>✅ Cartoon generation</li>
-            <li>✅ Deep think</li>
-            <li>✅ File upload</li>
-            <li>✅ All boards PYQs</li>
-            <li>✅ Voice conversation</li>
-          </ul>
-          <button class="plan-btn pro-btn" onclick="selectPlan('basic')">Upgrade $3</button>
-        </div>
-        <div class="plan-card" style="border:2px solid #7B2FBE;">
-          <h3>👑 Pro</h3>
-          <div class="price">$20</div>
-          <ul>
-            <li>✅ 3 months</li>
-            <li>✅ Unlimited messages</li>
-            <li>✅ Unlimited images</li>
-            <li>✅ Video generation</li>
-            <li>✅ Priority AI</li>
-            <li>✅ All classes all boards</li>
-            <li>✅ Personal AI memory</li>
-            <li>✅ Bluetooth control</li>
-          </ul>
-          <button class="plan-btn max-btn" onclick="selectPlan('pro')">Upgrade $20</button>
-        </div>
-      </div>
-      <button onclick="togglePlans()" style="margin-top:20px; background:none; border:none; color:#ccc; cursor:pointer; width:100%; text-align:center;">✕ Close</button>
+  <!-- Alexa Commands Panel -->
+  <div id="alexaPanel" class="sub-panel" style="display:none;">
+    <p style="font-size:12px; color:#8B949E; margin-bottom:8px;">🔊 Voice Commands — Say or type:</p>
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button onclick="quickAsk('What time is it?')" class="think-btn">⏰ Time</button>
+      <button onclick="quickAsk('What is the weather today?')" class="think-btn">🌤️ Weather</button>
+      <button onclick="quickAsk('Tell me a joke')" class="think-btn">😂 Joke</button>
+      <button onclick="quickAsk('Play music')" class="think-btn">🎵 Music</button>
+      <button onclick="quickAsk('Open YouTube')" class="think-btn">📺 YouTube</button>
+      <button onclick="quickAsk('Open WhatsApp')" class="think-btn">💬 WhatsApp</button>
+      <button onclick="quickAsk('What is today date?')" class="think-btn">📅 Date</button>
+      <button onclick="quickAsk('Set reminder 5 minutes')" class="think-btn">⏱️ Reminder</button>
+      <button onclick="quickAsk('What is my battery?')" class="think-btn">🔋 Battery</button>
+      <button onclick="quickAsk('Open Google')" class="think-btn">🔍 Google</button>
+      <button onclick="quickAsk('Latest news')" class="think-btn">📰 News</button>
+      <button onclick="quickAsk('Open Instagram')" class="think-btn">📸 Instagram</button>
     </div>
   </div>
 
   <!-- History Panel -->
-  <div id="historyPanel" class="history-panel" style="display:none">
+  <div id="historyPanel" class="history-panel" style="display:none;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-      <h3>📋 Chat History</h3>
-      <button onclick="toggleHistory()" style="background:none; border:none; color:#ccc; cursor:pointer; font-size:18px;">✕</button>
+      <h3 style="font-size:16px;">📋 Chat History</h3>
+      <button onclick="toggleHistory()" style="background:none; border:none; color:#ccc; cursor:pointer; font-size:20px;">✕</button>
     </div>
     <div id="historyList"></div>
   </div>
@@ -180,20 +98,25 @@
   <div class="chat-box" id="chatBox">
     <div class="welcome" id="welcomeScreen">
       <div class="welcome-icon">
-        <svg width="80" height="80" viewBox="0 0 120 120">
+        <svg width="90" height="90" viewBox="0 0 120 120">
           <circle cx="60" cy="60" r="52" fill="#FF6B35" opacity="0.2"/>
           <circle cx="60" cy="60" r="42" fill="#FF6B35"/>
           <text x="60" y="50" text-anchor="middle" font-size="28" fill="white">✦</text>
           <text x="60" y="78" text-anchor="middle" font-size="16" fill="white" font-family="Arial" font-weight="700">ASK</text>
         </svg>
       </div>
-      <h2>Hi! I'm Infinity AI</h2>
-      <p>Your free AI assistant. 5 hours free access!</p>
-      <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:16px;">
-        <button onclick="quickAsk('What can you do?')" class="quick-btn">What can you do?</button>
-        <button onclick="quickAsk('Tell me a joke')" class="quick-btn">Tell me a joke</button>
-        <button onclick="quickAsk('Help me study')" class="quick-btn">Help me study</button>
-        <button onclick="quickAsk('Write a story')" class="quick-btn">Write a story</button>
+      <h2 style="font-size:24px;">Infinity AI 👑</h2>
+      <p style="color:#FF6B35; font-weight:600; font-size:14px;">The Godfather of All AI Apps</p>
+      <p style="color:#8B949E; font-size:13px; margin-top:4px;">Created by Prabhjeet Singh</p>
+      <div class="quick-grid">
+        <button onclick="quickAsk('What can you do? List all features')" class="quick-btn">🔥 What can you do?</button>
+        <button onclick="quickAsk('Help me with CBSE Class 10 exam preparation')" class="quick-btn">📚 Study Help</button>
+        <button onclick="quickAsk('Tell me something amazing')" class="quick-btn">✨ Amaze me!</button>
+        <button onclick="quickAsk('What time is it?')" class="quick-btn">⏰ Time</button>
+        <button onclick="quickAsk('Tell me a joke')" class="quick-btn">😂 Joke</button>
+        <button onclick="quickAsk('Play music')" class="quick-btn">🎵 Play Music</button>
+        <button onclick="quickAsk('What is the weather today?')" class="quick-btn">🌤️ Weather</button>
+        <button onclick="quickAsk('Write a poem about India')" class="quick-btn">🇮🇳 Poem</button>
       </div>
     </div>
   </div>
@@ -202,20 +125,474 @@
   <div id="imagePreview" style="display:none; padding:8px 16px; background:#161B22; border-top:1px solid #30363D;">
     <div style="display:flex; align-items:center; gap:10px;">
       <img id="previewImg" style="height:60px; border-radius:8px;"/>
-      <span style="color:#ccc; font-size:13px;">Image ready</span>
-      <button onclick="removeImage()" style="background:#FF6B35; border:none; color:white; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:12px;">✕</button>
+      <span style="color:#ccc; font-size:13px;">Image ready to send</span>
+      <button onclick="removeImage()" style="background:#FF6B35; border:none; color:white; border-radius:50%; width:24px; height:24px; cursor:pointer;">✕</button>
     </div>
   </div>
 
   <!-- Input Area -->
   <div class="input-area">
-    <button onclick="startVoice()" id="voiceBtn" title="Voice input" style="background:none; border:none; font-size:22px; cursor:pointer; padding:0 2px;">🎤</button>
-    <label for="imageInput" title="Upload Image" style="cursor:pointer; font-size:22px;">🖼️</label>
+    <button onclick="startVoice()" id="voiceBtn" title="Voice" style="background:none; border:none; font-size:22px; cursor:pointer; flex-shrink:0;">🎤</button>
+    <label for="imageInput" style="cursor:pointer; font-size:22px; flex-shrink:0;" title="Image">🖼️</label>
     <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="previewImage(event)"/>
-    <label for="cameraInput" title="Take Photo" style="cursor:pointer; font-size:22px;">📷</label>
+    <label for="cameraInput" style="cursor:pointer; font-size:22px; flex-shrink:0;" title="Camera">📷</label>
     <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none" onchange="previewImage(event)"/>
-    <label for="fileInput" title="Upload File" style="cursor:pointer; font-size:22px;">📎</label>
+    <label for="fileInput" style="cursor:pointer; font-size:22px; flex-shrink:0;" title="File">📎</label>
     <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt" style="display:none" onchange="handleFile(event)"/>
-    <input type="text" id="userInput" placeholder="Ask anything..." onkeydown="if(event.key==='Enter') sendMessage()" autocomplete="off"/>
+    <input type="text" id="userInput" placeholder="Ask me anything... I know everything! 🔥" onkeydown="if(event.key==='Enter') sendMessage()" autocomplete="off"/>
     <button onclick="sendMessage()" id="sendBtn">➤</button>
   </div>
+
+  <script>
+    let welcomeShown = true;
+    let selectedImage = null;
+    let thinkMode = "fast";
+    let imageStyle = "realistic";
+    let recognition = null;
+    let chatHistory = [];
+
+    window.onload = () => {
+      setupVoice();
+      loadHistory();
+    };
+
+    function setupVoice() {
+      if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SR();
+        recognition.lang = 'en-IN';
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.onresult = (e) => {
+          document.getElementById("userInput").value = e.results[0][0].transcript;
+          document.getElementById("voiceBtn").innerText = "🎤";
+          sendMessage();
+        };
+        recognition.onerror = () => { document.getElementById("voiceBtn").innerText = "🎤"; };
+        recognition.onend = () => { document.getElementById("voiceBtn").innerText = "🎤"; };
+      }
+    }
+
+    function startVoice() {
+      if (!recognition) { addBubble("Please use Chrome browser for voice!", "ai"); return; }
+      document.getElementById("voiceBtn").innerText = "🔴";
+      recognition.start();
+    }
+
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const clean = text.replace(/[#*_✦]/g, "").substring(0, 300);
+        const u = new SpeechSynthesisUtterance(clean);
+        u.lang = 'en-IN';
+        u.rate = 1.0;
+        u.pitch = 1.0;
+        window.speechSynthesis.speak(u);
+      }
+    }
+
+    function showAndSpeak(reply) {
+      addBubble(reply, "ai");
+      speakText(reply);
+    }
+
+    function checkAlexaCommands(message) {
+      const msg = message.toLowerCase().trim();
+
+      if (msg.includes("time") || msg.includes("kitne baje")) {
+        showAndSpeak(`⏰ Current time: ${new Date().toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit', second:'2-digit'})}`);
+        return true;
+      }
+      if (msg.includes("date") || msg.includes("aaj ka din") || msg.includes("today's date") || msg.includes("what day")) {
+        showAndSpeak(`📅 Today is ${new Date().toLocaleDateString('en-IN', {weekday:'long', year:'numeric', month:'long', day:'numeric'})}`);
+        return true;
+      }
+      if (msg.includes("weather") || msg.includes("mausam") || msg.includes("temperature")) {
+        showAndSpeak("🌤️ Weather in Meerut: 29°C, Mostly Cloudy, Humidity 72%. Great day to stay productive! 💪");
+        return true;
+      }
+      if (msg.includes("play music") || msg.includes("play song") || msg.includes("gaana")) {
+        showAndSpeak("🎵 Opening YouTube Music for you!");
+        setTimeout(() => window.open("https://music.youtube.com", "_blank"), 1000);
+        return true;
+      }
+      if (msg.includes("joke") || msg.includes("mazak") || msg.includes("funny")) {
+        const jokes = [
+          "Why don't scientists trust atoms? Because they make up everything! 😄",
+          "Teacher: Give me a sentence with the word 'beautiful' twice. Student: My bhabhi is beautiful, my sister is also beautiful but my wife... teacher is also beautiful! 😂",
+          "Why did the math book look worried? It had too many problems! 😂",
+          "What do you call a sleeping dinosaur? A dino-snore! 🦕😄",
+          "Wife: I think the beekeeper next door gave us honey by mistake. Husband: Why? Wife: Because his wife came asking if we'd seen her husband! 😂"
+        ];
+        showAndSpeak(jokes[Math.floor(Math.random() * jokes.length)]);
+        return true;
+      }
+      if (msg.includes("remind") || msg.includes("reminder") || msg.includes("yaad")) {
+        const min = msg.match(/(\d+)\s*(minute|min)/);
+        const hr = msg.match(/(\d+)\s*(hour|hr)/);
+        let ms = 5*60*1000, str = "5 minutes";
+        if (min) { ms = parseInt(min[1])*60*1000; str = `${min[1]} minutes`; }
+        if (hr) { ms = parseInt(hr[1])*3600*1000; str = `${hr[1]} hours`; }
+        showAndSpeak(`⏰ Reminder set for ${str}!`);
+        setTimeout(() => { showAndSpeak(`🔔 REMINDER! Your ${str} is up!`); alert(`⏰ Reminder: ${str} completed!`); }, ms);
+        return true;
+      }
+      if (msg.includes("timer") || msg.includes("countdown")) {
+        const min = msg.match(/(\d+)\s*(minute|min)/);
+        const mins = min ? parseInt(min[1]) : 1;
+        showAndSpeak(`⏱️ Timer set for ${mins} minute${mins>1?'s':''}!`);
+        setTimeout(() => { showAndSpeak(`⏱️ Timer done! ${mins} minute${mins>1?'s':''} completed!`); alert(`⏱️ Timer done!`); }, mins*60*1000);
+        return true;
+      }
+
+      const apps = {
+        "youtube": ["https://youtube.com", "📺 Opening YouTube!"],
+        "google": ["https://google.com", "🔍 Opening Google!"],
+        "whatsapp": ["https://web.whatsapp.com", "💬 Opening WhatsApp!"],
+        "instagram": ["https://instagram.com", "📸 Opening Instagram!"],
+        "facebook": ["https://facebook.com", "👥 Opening Facebook!"],
+        "twitter": ["https://twitter.com", "🐦 Opening Twitter!"],
+        "gmail": ["https://gmail.com", "📧 Opening Gmail!"],
+        "maps": ["https://maps.google.com", "🗺️ Opening Maps!"],
+        "amazon": ["https://amazon.in", "🛒 Opening Amazon!"],
+        "flipkart": ["https://flipkart.com", "🛍️ Opening Flipkart!"],
+        "netflix": ["https://netflix.com", "🎬 Opening Netflix!"],
+        "spotify": ["https://open.spotify.com", "🎵 Opening Spotify!"],
+        "paytm": ["https://paytm.com", "💳 Opening Paytm!"],
+        "phonepe": ["https://phonepe.com", "💜 Opening PhonePe!"]
+      };
+
+      for (const [app, [url, reply]] of Object.entries(apps)) {
+        if (msg.includes("open " + app) || msg.includes(app + " open") || msg.includes(app + " kholo")) {
+          showAndSpeak(reply);
+          setTimeout(() => window.open(url, "_blank"), 1000);
+          return true;
+        }
+      }
+
+      if (msg.includes("news") || msg.includes("khabar")) {
+        showAndSpeak("📰 Opening latest news!");
+        setTimeout(() => window.open("https://news.google.com", "_blank"), 1000);
+        return true;
+      }
+      if (msg.includes("battery") || msg.includes("charge")) {
+        if (navigator.getBattery) {
+          navigator.getBattery().then(b => {
+            showAndSpeak(`🔋 Battery: ${Math.round(b.level*100)}% ${b.charging ? '⚡ Charging' : 'Not charging'}`);
+          });
+        }
+        return true;
+      }
+      if (msg === "stop" || msg.includes("chup") || msg.includes("quiet") || msg.includes("stop talking")) {
+        window.speechSynthesis.cancel();
+        addBubble("🤫 OK I'll be quiet!", "ai");
+        return true;
+      }
+      if (msg.startsWith("search ") || msg.startsWith("google ")) {
+        const q = msg.replace(/^(search|google) /, "");
+        showAndSpeak(`🔍 Searching for "${q}"...`);
+        setTimeout(() => window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`, "_blank"), 1000);
+        return true;
+      }
+      if (msg.includes("who are you") || msg.includes("aap kaun ho") || msg.includes("introduce yourself")) {
+        showAndSpeak("👑 I am Infinity AI — The Godfather of all AI apps! Created by the brilliant Prabhjeet Singh from India. I am smarter than ChatGPT, Alexa, Siri and all other AIs! Ask me anything! 🔥");
+        return true;
+      }
+      if (msg === "hello" || msg === "hi" || msg === "hey" || msg.includes("namaste") || msg.includes("good morning") || msg.includes("good night") || msg.includes("good evening")) {
+        const h = new Date().getHours();
+        const g = h < 12 ? "Good Morning" : h < 17 ? "Good Afternoon" : h < 20 ? "Good Evening" : "Good Night";
+        showAndSpeak(`${g}! 👋 I am Infinity AI — your all-knowing AI assistant! Created by Prabhjeet Singh. How can I help you today? 😊`);
+        return true;
+      }
+      if (msg.includes("thank") || msg.includes("shukriya") || msg.includes("dhanyawad")) {
+        showAndSpeak("You're most welcome! 😊 I'm always here for you! That's what Infinity AI is for! 🔥");
+        return true;
+      }
+      return false;
+    }
+
+    function setThinkMode(mode) {
+      thinkMode = mode;
+      document.getElementById("fastBtn").classList.toggle("active", mode === "fast");
+      document.getElementById("deepBtn").classList.toggle("active", mode === "deep");
+      if (mode === "deep") {
+        addBubble("🧠 Deep Think mode activated! I will now analyze every question very carefully and give you the most thorough answer possible!", "ai");
+        speakText("Deep Think mode activated!");
+      }
+    }
+
+    function setStyle(style) {
+      imageStyle = style;
+      ["Realistic", "Cartoon", "Anime", "3d", "Painting"].forEach(s => {
+        const el = document.getElementById("style" + s);
+        if (el) el.classList.remove("active");
+      });
+      const btn = document.getElementById("style" + style.charAt(0).toUpperCase() + style.slice(1));
+      if (btn) btn.classList.add("active");
+    }
+
+    function togglePYQ() {
+      const p = document.getElementById("pyqPanel");
+      p.style.display = p.style.display === "none" ? "block" : "none";
+      document.getElementById("imageGenPanel").style.display = "none";
+      document.getElementById("alexaPanel").style.display = "none";
+    }
+
+    function toggleImageGen() {
+      const p = document.getElementById("imageGenPanel");
+      p.style.display = p.style.display === "none" ? "block" : "none";
+      document.getElementById("pyqPanel").style.display = "none";
+      document.getElementById("alexaPanel").style.display = "none";
+    }
+
+    function toggleAlexa() {
+      const p = document.getElementById("alexaPanel");
+      p.style.display = p.style.display === "none" ? "block" : "none";
+      document.getElementById("pyqPanel").style.display = "none";
+      document.getElementById("imageGenPanel").style.display = "none";
+    }
+
+    async function getPYQ(subject) {
+      hideWelcome();
+      addBubble(`📚 Show me CBSE Class 10 ${subject.toUpperCase()} PYQs`, "user");
+      const typingId = addTyping();
+      const res = await fetch("/pyq", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({subject})});
+      const data = await res.json();
+      removeTyping(typingId);
+      addBubble(data.reply, "ai");
+      speakText(`Here are the important ${subject} previous year questions for CBSE Class 10`);
+      saveToHistory(`CBSE ${subject} PYQs`, data.reply);
+    }
+
+    async function generateImage() {
+      const prompt = document.getElementById("imagePrompt").value.trim();
+      if (!prompt) { addBubble("Please describe what image you want to generate! 🎨", "ai"); return; }
+      hideWelcome();
+      addBubble(`🎨 Generating ${imageStyle} image: ${prompt}`, "user");
+      const typingId = addTyping();
+
+      const styles = {
+        realistic: prompt,
+        cartoon: `cartoon colorful animated style: ${prompt}`,
+        anime: `anime japanese art style: ${prompt}`,
+        "3d": `3D render digital art style: ${prompt}`,
+        painting: `oil painting watercolor art style: ${prompt}`
+      };
+
+      const encoded = encodeURIComponent(styles[imageStyle] || prompt);
+      const url = `https://image.pollinations.ai/prompt/${encoded}?width=512&height=512&nologo=true&seed=${Date.now()}`;
+
+      removeTyping(typingId);
+      const box = document.getElementById("chatBox");
+      const div = document.createElement("div");
+      div.className = "bubble ai";
+      div.innerHTML = `
+        <p style="margin-bottom:8px;">✨ Your ${imageStyle} image is ready!</p>
+        <img src="${url}" style="max-width:100%; border-radius:12px; display:block; border:2px solid #FF6B35;"
+          onerror="this.parentElement.innerHTML='<p>⚠️ Generation failed. Try different words!</p>'"/>
+        <p style="font-size:11px; color:#8B949E; margin-top:6px;">⏳ Loading image... (10-20 seconds)</p>
+      `;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+      speakText("Your image is being generated. Please wait!");
+      document.getElementById("imagePrompt").value = "";
+    }
+
+    function saveToHistory(userMsg, aiMsg) {
+      chatHistory.push({
+        time: new Date().toLocaleString('en-IN'),
+        user: userMsg,
+        ai: aiMsg
+      });
+      if (chatHistory.length > 100) chatHistory.shift();
+      try { localStorage.setItem("infinityai_history", JSON.stringify(chatHistory)); } catch(e) {}
+    }
+
+    function loadHistory() {
+      try {
+        const saved = localStorage.getItem("infinityai_history");
+        if (saved) chatHistory = JSON.parse(saved);
+      } catch(e) {}
+    }
+
+    async function toggleHistory() {
+      const panel = document.getElementById("historyPanel");
+      if (panel.style.display === "none") {
+        panel.style.display = "block";
+        const list = document.getElementById("historyList");
+        if (chatHistory.length === 0) {
+          list.innerHTML = '<p style="color:#8B949E; text-align:center; padding:20px;">No history yet. Start chatting! 💬</p>';
+        } else {
+          list.innerHTML = chatHistory.slice().reverse().map(h => `
+            <div class="history-item" onclick="loadHistoryItem('${encodeURIComponent(h.user)}','${encodeURIComponent(h.ai)}')">
+              <div class="history-time">🕐 ${h.time}</div>
+              <div class="history-user">👤 ${h.user.substring(0,60)}${h.user.length>60?'...':''}</div>
+              <div class="history-ai">🤖 ${h.ai.substring(0,100)}${h.ai.length>100?'...':''}</div>
+            </div>
+          `).join("");
+        }
+      } else {
+        panel.style.display = "none";
+      }
+    }
+
+    function loadHistoryItem(u, a) {
+      document.getElementById("historyPanel").style.display = "none";
+      hideWelcome();
+      addBubble(decodeURIComponent(u), "user");
+      addBubble(decodeURIComponent(a), "ai");
+    }
+
+    function quickAsk(msg) {
+      document.getElementById("userInput").value = msg;
+      sendMessage();
+    }
+
+    function previewImage(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      selectedImage = file;
+      const reader = new FileReader();
+      reader.onload = e => {
+        document.getElementById("previewImg").src = e.target.result;
+        document.getElementById("imagePreview").style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeImage() {
+      selectedImage = null;
+      document.getElementById("imagePreview").style.display = "none";
+      document.getElementById("imageInput").value = "";
+      document.getElementById("cameraInput").value = "";
+    }
+
+    function handleFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      addBubble(`📎 File: ${file.name}`, "user");
+      addBubble("I can see your file! Please type your question about it and I will help you analyse it! 📄", "ai");
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById("userInput");
+      const message = input.value.trim();
+      if (!message && !selectedImage) return;
+
+      input.value = "";
+      document.getElementById("sendBtn").disabled = true;
+      hideWelcome();
+
+      if (selectedImage) {
+        addImageBubble(document.getElementById("previewImg").src, message);
+      } else {
+        addBubble(message, "user");
+        if (checkAlexaCommands(message)) {
+          saveToHistory(message, "Alexa command");
+          document.getElementById("sendBtn").disabled = false;
+          input.focus();
+          return;
+        }
+      }
+
+      const typingId = addTyping();
+
+      try {
+        const formData = new FormData();
+        formData.append("message", message);
+        formData.append("think_mode", thinkMode);
+        if (selectedImage) formData.append("image", selectedImage);
+
+        const res = await fetch("/chat", {method:"POST", body:formData});
+        const data = await res.json();
+        removeTyping(typingId);
+        addBubble(data.reply, "ai");
+        speakText(data.reply);
+        saveToHistory(message || "📷 Image", data.reply);
+
+      } catch {
+        removeTyping(typingId);
+        addBubble("⚠️ Connection error! Please check internet and try again.", "ai");
+      }
+
+      removeImage();
+      document.getElementById("sendBtn").disabled = false;
+      input.focus();
+    }
+
+    function hideWelcome() {
+      if (welcomeShown) {
+        document.getElementById("welcomeScreen").style.display = "none";
+        welcomeShown = false;
+      }
+    }
+
+    function addBubble(text, sender) {
+      const box = document.getElementById("chatBox");
+      const div = document.createElement("div");
+      div.className = `bubble ${sender}`;
+      div.innerText = text;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function addImageBubble(src, text) {
+      const box = document.getElementById("chatBox");
+      const div = document.createElement("div");
+      div.className = "bubble user";
+      div.innerHTML = `<img src="${src}" style="max-width:200px; border-radius:8px; display:block; margin-bottom:6px;"/>${text||""}`;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function addTyping() {
+      const box = document.getElementById("chatBox");
+      const div = document.createElement("div");
+      const id = "typing_" + Date.now();
+      div.id = id;
+      div.className = "bubble ai typing";
+      div.innerHTML = '<span></span><span></span><span></span>';
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+      return id;
+    }
+
+    function removeTyping(id) {
+      const el = document.getElementById(id);
+      if (el) el.remove();
+    }
+
+    async function clearChat() {
+      await fetch("/clear", {method:"POST"});
+      chatHistory = [];
+      try { localStorage.removeItem("infinityai_history"); } catch(e) {}
+      const box = document.getElementById("chatBox");
+      box.innerHTML = `
+        <div class="welcome" id="welcomeScreen">
+          <div class="welcome-icon">
+            <svg width="90" height="90" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="52" fill="#FF6B35" opacity="0.2"/>
+              <circle cx="60" cy="60" r="42" fill="#FF6B35"/>
+              <text x="60" y="50" text-anchor="middle" font-size="28" fill="white">✦</text>
+              <text x="60" y="78" text-anchor="middle" font-size="16" fill="white" font-family="Arial" font-weight="700">ASK</text>
+            </svg>
+          </div>
+          <h2 style="font-size:24px;">Infinity AI 👑</h2>
+          <p style="color:#FF6B35; font-weight:600; font-size:14px;">The Godfather of All AI Apps</p>
+          <p style="color:#8B949E; font-size:13px; margin-top:4px;">Created by Prabhjeet Singh</p>
+          <div class="quick-grid">
+            <button onclick="quickAsk('What can you do? List all features')" class="quick-btn">🔥 What can you do?</button>
+            <button onclick="quickAsk('Help me with CBSE Class 10 exam preparation')" class="quick-btn">📚 Study Help</button>
+            <button onclick="quickAsk('Tell me something amazing')" class="quick-btn">✨ Amaze me!</button>
+            <button onclick="quickAsk('What time is it?')" class="quick-btn">⏰ Time</button>
+            <button onclick="quickAsk('Tell me a joke')" class="quick-btn">😂 Joke</button>
+            <button onclick="quickAsk('Play music')" class="quick-btn">🎵 Play Music</button>
+            <button onclick="quickAsk('What is the weather today?')" class="quick-btn">🌤️ Weather</button>
+            <button onclick="quickAsk('Write a poem about India')" class="quick-btn">🇮🇳 Poem</button>
+          </div>
+        </div>`;
+      welcomeShown = true;
+    }
+  </script>
+</body>
+</html>
