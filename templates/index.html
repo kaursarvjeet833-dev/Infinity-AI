@@ -191,9 +191,10 @@
       }
     }
 
-    function showAndSpeak(reply) {
-      addBubble(reply, "ai");
-      speakText(reply);
+function showAndSpeak(reply) {
+  addBubble(reply, "ai");
+}
+      
     }
 
     function checkAlexaCommands(message) {
@@ -507,7 +508,7 @@
         const data = await res.json();
         removeTyping(typingId);
         addBubble(data.reply, "ai");
-        speakText(data.reply);
+       
         saveToHistory(message || "📷 Image", data.reply);
 
       } catch {
